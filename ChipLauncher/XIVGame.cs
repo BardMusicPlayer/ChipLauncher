@@ -10,6 +10,7 @@ using System.Net.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace XIVLauncher
 {
@@ -63,7 +64,7 @@ namespace XIVLauncher
             }
 
             // NOT FOUND
-            return "";
+            return "UNKNOWN";
         }
 
         public static string GamePath { get; set; }
@@ -127,7 +128,7 @@ namespace XIVLauncher
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Could not generate hashes. Is your game path correct? " + exc);
+                MessageBox.Show("Could not generate hashes. Is your game path correct? " + exc);
             }
 
             WebClient sidClient = new WebClient();
@@ -137,9 +138,24 @@ namespace XIVLauncher
             sidClient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
             InitiateSslTrust();
-            
-            var url = "https://patch-gamever.ffxiv.com/http/win32/ffxivneo_release_game/" +  GetLocalGamever() + "/" + GetSid(username, password, otp, isSteam);
-            sidClient.UploadString(url, hashstr); //request real session id
+
+            try
+            {
+                var localGameVer = GetLocalGamever();
+                var localSid = GetSid(username, password, otp, isSteam);
+
+                if (localGameVer.Equals("BAD") || localSid.Equals("BAD"))
+                {
+                    return "BAD";
+                }
+
+                var url = "https://patch-gamever.ffxiv.com/http/win32/ffxivneo_release_game/" + localGameVer + "/" + localSid;
+                sidClient.UploadString(url, hashstr); //request real session id
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"Unable to retrieve a session ID from the server.\n" + exc);
+            }
 
             return sidClient.ResponseHeaders["X-Patch-Unique-Id"];
         }
@@ -165,20 +181,38 @@ namespace XIVLauncher
                 loginData.Headers.Add("Referer", string.Format("https://ffxiv-login.square-enix.com/oauth/ffxivarr/login/top?lng=en&rgn=3&isft=0&issteam={0}", isSteam ? 1 : 0));
                 loginData.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                byte[] response =
-                loginData.UploadValues("https://ffxiv-login.square-enix.com/oauth/ffxivarr/login/login.send", new NameValueCollection() //get the session id with user credentials
+                try
                 {
-                    { "_STORED_", GetStored(isSteam) },
-                    { "sqexid", username },
-                    { "password", password },
-                    { "otppw", otp }
-                });
+                    byte[] response =
+                        loginData.UploadValues("https://ffxiv-login.square-enix.com/oauth/ffxivarr/login/login.send", new NameValueCollection() //get the session id with user credentials
+                        {
+                            { "_STORED_", GetStored(isSteam) },
+                            { "sqexid", username },
+                            { "password", password },
+                            { "otppw", otp }
+                        });
 
-                string reply = System.Text.Encoding.UTF8.GetString(response);
-                //Console.WriteLine(reply);
-                Regex sidre = new Regex(@"sid,(?<sid>.*),terms");
-                var sid = sidre.Matches(reply)[0].Groups["sid"].Value;
-                return sid;
+                    string reply = System.Text.Encoding.UTF8.GetString(response);
+                    Console.WriteLine(reply);
+                    Regex sidre = new Regex(@"sid,(?<sid>.*),terms");
+                    var matches = sidre.Matches(reply);
+                    if (matches.Count == 0)
+                    {
+                        if (reply.Contains("ID or password is incorrect"))
+                        {
+                            MessageBox.Show("Incorrect username or password.", "Error", MessageBoxButton.OK);
+                            return "BAD";
+                        }
+                    }
+
+                    var sid = sidre.Matches(reply)[0].Groups["sid"].Value;
+                    return sid;
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show($"Something failed when attempting to request a session ID.\n" + exc);
+                    return "BAD";
+                }
             }
         }
 
@@ -192,9 +226,10 @@ namespace XIVLauncher
                     return line;
                 }
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                return "0";
+                MessageBox.Show("Unable to get local game version.\n" + exc);
+                return "BAD";
             }
         }
 
@@ -223,7 +258,7 @@ namespace XIVLauncher
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Failed getting gate status. " + exc);
+                MessageBox.Show("Failed getting gate status. " + exc);
                 return false;
             }
 

@@ -60,6 +60,12 @@ namespace ChipLauncher
                         this.Hide();
                         btn_ShowAdvanced_Click(null, null);
 
+                        if (!CheckAndSetGamePath())
+                        {
+                            App.Current.Shutdown();
+                            return;
+                        }
+
                         string jsonStr = File.ReadAllText(args[1]);
                         LoadInputFromJson(jsonStr);
                         Login(CreateCharacterFromInput());
@@ -79,6 +85,9 @@ namespace ChipLauncher
             try
             {
                 var sid = XIVGame.GetRealSid(data.username, data.password, data.otp, data.isSteam);
+                if (sid.Equals("BAD"))
+                    return;
+
                 var ffxivGame = XIVGame.LaunchGame(sid, 1, true, 0, data.isSteam);
                 if (ffxivGame != null && this.AdvancedModeEnabled)
                     EscalateProcess(ffxivGame, data.cpuIds, data.priority);
@@ -87,7 +96,7 @@ namespace ChipLauncher
             }
             catch (Exception exc)
             {
-                MessageBox.Show("Logging in failed, check your login information or try again. " + exc, "Error", MessageBoxButton.OK);
+                MessageBox.Show("Logging in failed, check your login information or try again.\n" + exc.Message, "Error", MessageBoxButton.OK);
             }
         }
 
@@ -104,11 +113,32 @@ namespace ChipLauncher
             }
         }
 
+        private string AskUserToManuallySetGamePath()
+        {
+            string gamePath = "UNKNOWN";
+
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.RestoreDirectory = true;
+            openDialog.FileName = "ffxivboot.exe";
+            openDialog.DefaultExt = "exe";
+            openDialog.Filter = "exe files (*.exe)|*.exe|All files (*.*)|*.*";
+            if (openDialog.ShowDialog() ?? false && !string.IsNullOrEmpty(openDialog.FileName))
+            {
+                gamePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(openDialog.FileName), "../")).Replace("\\", "/");
+            }
+
+            return gamePath;
+        }
+
         private bool CheckAndSetGamePath()
         {
             if (Directory.Exists(XIVGame.GamePath))
             {
-                return true;
+                if (!File.Exists(Path.Combine(XIVGame.GamePath, "boot/ffxivboot.exe")))
+                {
+                    MessageBox.Show($"GamePath is a valid directory, but not the correct one. Going to reset this. {XIVGame.GamePath}", "Error", MessageBoxButton.OK);
+                    XIVGame.GamePath = string.Empty;
+                }
             }
 
             AppConfig config = new AppConfig();
@@ -124,7 +154,12 @@ namespace ChipLauncher
             var configFile = appDataDir + Path.DirectorySeparatorChar + "settings.json";
             if (!File.Exists(configFile))
             {
-                config.GamePath = XIVGame.GetFFXIVInstallPath();
+                string searchedGamePath = XIVGame.GetFFXIVInstallPath();
+                if (searchedGamePath.Equals("UNKNOWN"))
+                {
+                    MessageBox.Show($"Unable to auto-detect install path for FFXIV. Please navigate to your ffxivboot.exe.", "Error", MessageBoxButton.OK);
+                    config.GamePath = AskUserToManuallySetGamePath();
+                }
                 string js = JsonSerializer.Serialize(config);
                 File.WriteAllText(configFile, js);
             }
@@ -134,7 +169,7 @@ namespace ChipLauncher
             config = JsonSerializer.Deserialize<AppConfig>(jsonStr);
             if (!Directory.Exists(config.GamePath))
             {
-                MessageBox.Show($"Unable to auto-detect install path for FFXIV. Please add correct path to FFXIV in settings.json under {appDataDir} --> {configFile}", "Error", MessageBoxButton.OK);
+                MessageBox.Show($"Unable to detect install path for FFXIV. Please add correct path to FFXIV in settings.json at {configFile}", "Error", MessageBoxButton.OK);
                 return false;
             }
 
