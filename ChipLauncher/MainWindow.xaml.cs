@@ -60,14 +60,14 @@ namespace ChipLauncher
                         this.Hide();
                         btn_ShowAdvanced_Click(null, null);
 
+                        string jsonStr = File.ReadAllText(args[1]);
+                        LoadInputFromJson(jsonStr);
+
                         if (!CheckAndSetGamePath())
                         {
                             App.Current.Shutdown();
                             return;
                         }
-
-                        string jsonStr = File.ReadAllText(args[1]);
-                        LoadInputFromJson(jsonStr);
                         Login(CreateCharacterFromInput());
                     }
                 });
