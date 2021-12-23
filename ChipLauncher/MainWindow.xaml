@@ -36,13 +36,14 @@
             <ColumnDefinition Width="160" />
         </Grid.ColumnDefinitions>
         <TextBox x:Name="tbox_Username" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" ToolTip="Your FFXIV account name." Tag="" Grid.Column="1" TabIndex="1"/>
-        <TextBox x:Name="tbox_OTP" HorizontalAlignment="Left" Height="23" Margin="10,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1" TabIndex="3" ToolTip="One-time password. (Optional)"/>
+        <!--TextBox x:Name="tbox_OTP" HorizontalAlignment="Left" Height="23" Margin="10,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1" TabIndex="3" ToolTip="One-time password. (Optional)"/-->
         <Button x:Name="btn_Launch" Content="Launch FFXIV" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1" Click="btn_Launch_Click" TabIndex="5" Height="30" Padding="5"/>
         <PasswordBox x:Name="pbox_Password" Grid.Column="1" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="2" ToolTip="The password for your account."/>
+        <CheckBox x:Name="cbox_UseOTP" Content="Use OTP" Grid.Column="1" HorizontalAlignment="Left" Margin="10,84,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="4" ToolTip="Check this if you use an authenticator."/>
         <CheckBox x:Name="cbox_IsSteam" Content="Use Steam" Grid.Column="1" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="4" ToolTip="Check this if you use the Steam client."/>
         <Label x:Name="lbl_Username" Content="Username:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="23" Width="100" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="5,0"/>
         <Label x:Name="lbl_Password" Content="Password:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Height="23" Width="100" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="5,0"/>
-        <Label x:Name="lbl_OTP" Content="OTP:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Height="23" Width="100" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="5,0"/>
+        <!--Label x:Name="lbl_OTP" Content="OTP:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Height="23" Width="100" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="5,0"/-->
         <Image x:Name="img_Logo" HorizontalAlignment="Left" Height="70" Margin="25,100,0,0" VerticalAlignment="Top" Width="70" Source="Resources/Logo.ico"/>
         <Label x:Name="lbl_Affinity" Content="CPU Affinity:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" Height="23" HorizontalContentAlignment="Right" Padding="5,0" VerticalContentAlignment="Center"/>
         <Label x:Name="lbl_Priority" Content="Priority:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="100" Height="23" HorizontalContentAlignment="Right" Padding="5,0" VerticalContentAlignment="Center"/>

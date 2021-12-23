@@ -8,6 +8,7 @@ namespace ChipLauncher
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Reflection;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace ChipLauncher
         {
             public string username { get; set; }
             public string password { get; set; }
-            public string otp { get; set; }
+            public bool useOtp { get; set; }
             public bool isSteam { get; set; }
             public int[] cpuIds { get; set; }
             public ProcessPriorityClass priority { get; set; }
@@ -41,7 +42,7 @@ namespace ChipLauncher
 
             this.Width = 280;
             this.ShowTitleBar = true;
-            this.Title = "ChipLauncher v1.0";
+            this.Title = "ChipLauncher v"+ Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
 
             this.Loaded += MainWindow_Loaded;
         }
@@ -84,7 +85,7 @@ namespace ChipLauncher
 
             try
             {
-                var sid = XIVGame.GetRealSid(data.username, data.password, data.otp, data.isSteam);
+                var sid = XIVGame.GetRealSid(data.username, data.password, "123456", data.isSteam);
                 if (sid.Equals("BAD"))
                     return;
 
@@ -207,7 +208,7 @@ namespace ChipLauncher
             CharacterData data = new CharacterData();
             data.username = tbox_Username.Text;
             data.password = pbox_Password.Password;
-            data.otp = tbox_OTP.Text;
+            data.useOtp = cbox_UseOTP.IsChecked.GetValueOrDefault();
             data.isSteam = cbox_IsSteam.IsChecked.GetValueOrDefault();
             data.cpuIds = tbox_CpuAffinity.Text.Length > 0 ? Array.ConvertAll(tbox_CpuAffinity.Text.Split(','), int.Parse) : null;
             data.priority = (ProcessPriorityClass)combo_Priority.SelectedValue;
@@ -245,10 +246,10 @@ namespace ChipLauncher
             {
                 tbox_Username.Text = data.username;
                 pbox_Password.Password = data.password;
-                tbox_OTP.Text = data.otp;
+                cbox_UseOTP.IsChecked = data.useOtp;
                 cbox_IsSteam.IsChecked = data.isSteam;
                 tbox_CpuAffinity.Text = data.cpuIds.Length > 0 ? string.Join(",", data.cpuIds) : string.Empty;
-                combo_Priority.SelectedValue = (ProcessPriorityClass)data.priority;
+                combo_Priority.SelectedValue = data.priority;
                 XIVGame.GamePath = data.gamepath;
             }
         }
