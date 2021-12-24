@@ -3,7 +3,6 @@ using System.Windows;
 
 namespace ChipLauncher
 {
-    using MahApps.Metro.Controls;
     using Microsoft.Win32;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -14,10 +13,8 @@ namespace ChipLauncher
     using System.Threading.Tasks;
     using XIVLauncher;
 
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : Window
     {
-        private bool AdvancedModeEnabled = false;
-
         private class CharacterData
         {
             public string username { get; set; }
@@ -39,11 +36,7 @@ namespace ChipLauncher
             InitializeComponent();
 
             this.DataContext = this;
-
-            this.Width = 280;
-            this.ShowTitleBar = true;
             this.Title = "ChipLauncher v"+ Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
-
             this.Loaded += MainWindow_Loaded;
         }
 
@@ -51,15 +44,12 @@ namespace ChipLauncher
         {
             Task.Factory.StartNew(() =>
             {
-                // System.Threading.Thread.Sleep(1 * 1000);
-
                 this.Dispatcher.Invoke(() =>
                 {
                     string[] args = Environment.GetCommandLineArgs();
                     if (args.Length == 2)
                     {
                         this.Hide();
-                        btn_ShowAdvanced_Click(null, null);
 
                         string jsonStr = File.ReadAllText(args[1]);
                         LoadInputFromJson(jsonStr);
@@ -80,7 +70,7 @@ namespace ChipLauncher
             if (!XIVGame.GetGateStatus())
             {
                 MessageBox.Show("Square Enix seems to be running maintenance work right now. The game shouldn't be launched.", "Error", MessageBoxButton.OK);
-                return;// false;
+                return;
             }
 
             try
@@ -90,7 +80,7 @@ namespace ChipLauncher
                     return;
 
                 var ffxivGame = XIVGame.LaunchGame(sid, 1, true, 0, data.isSteam);
-                if (ffxivGame != null && this.AdvancedModeEnabled)
+                if (ffxivGame != null)
                     EscalateProcess(ffxivGame, data.cpuIds, data.priority);
 
                 App.Current.Shutdown();
@@ -187,20 +177,6 @@ namespace ChipLauncher
 
             CharacterData data = CreateCharacterFromInput();
             this.Login(data);
-        }
-
-        private void btn_ShowAdvanced_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.AdvancedModeEnabled == true)
-            {
-                this.Width = 280;
-            }
-            else
-            {
-                this.Width = 560;
-            }
-
-            this.AdvancedModeEnabled = !this.AdvancedModeEnabled;
         }
 
         private CharacterData CreateCharacterFromInput()

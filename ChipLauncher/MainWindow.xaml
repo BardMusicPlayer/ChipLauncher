@@ -1,57 +1,50 @@
-﻿<mah:MetroWindow
+﻿<Window
     x:Name="ChipLauncher" x:Class="ChipLauncher.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:local="clr-namespace:ChipLauncher"
     mc:Ignorable="d"
-    Height="220" Width="560"
-    
-    GlowBrush="{DynamicResource AccentColorBrush}"
-    BorderThickness="2"
-    
+    Height="220" Width="530"
+    Background="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"
     ResizeMode="NoResize"
-    WindowStartupLocation="CenterScreen" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+    WindowStartupLocation="CenterScreen"
+    Style="{StaticResource ChipotleWindowStyle}">
 
-    <mah:MetroWindow.RightWindowCommands>
-        <mah:WindowCommands>
-            <Button Click="btn_ShowAdvanced_Click" Content="Advanced">
-                <Button.ContentTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </Button.ContentTemplate>
-            </Button>
-        </mah:WindowCommands>
-    </mah:MetroWindow.RightWindowCommands>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="140" />
             <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="140" />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="tbox_Username" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" ToolTip="Your FFXIV account name." Tag="" Grid.Column="1" TabIndex="1"/>
-        <!--TextBox x:Name="tbox_OTP" HorizontalAlignment="Left" Height="23" Margin="10,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1" TabIndex="3" ToolTip="One-time password. (Optional)"/-->
-        <Button x:Name="btn_Launch" Content="Launch FFXIV" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1" Click="btn_Launch_Click" TabIndex="5" Height="30" Padding="5"/>
-        <PasswordBox x:Name="pbox_Password" Grid.Column="1" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="2" ToolTip="The password for your account."/>
-        <CheckBox x:Name="cbox_UseOTP" Content="Use OTP" Grid.Column="1" HorizontalAlignment="Left" Margin="10,84,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="4" ToolTip="Check this if you use an authenticator."/>
-        <CheckBox x:Name="cbox_IsSteam" Content="Use Steam" Grid.Column="1" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="4" ToolTip="Check this if you use the Steam client."/>
+
+        <Image x:Name="img_Logo" HorizontalAlignment="Left" Height="100" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="100" Source="Resources/Logo.ico"/>
+
         <Label x:Name="lbl_Username" Content="Username:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="23" Width="100" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="5,0"/>
+        <TextBox x:Name="tbox_Username" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="NoWrap" AcceptsReturn="False" VerticalAlignment="Top" Width="120" ToolTip="Your FFXIV account name." Tag="" Grid.Column="1" TabIndex="1"/>
+
         <Label x:Name="lbl_Password" Content="Password:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Height="23" Width="100" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="5,0"/>
-        <!--Label x:Name="lbl_OTP" Content="OTP:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Height="23" Width="100" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="5,0"/-->
-        <Image x:Name="img_Logo" HorizontalAlignment="Left" Height="70" Margin="25,100,0,0" VerticalAlignment="Top" Width="70" Source="Resources/Logo.ico"/>
-        <Label x:Name="lbl_Affinity" Content="CPU Affinity:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" Height="23" HorizontalContentAlignment="Right" Padding="5,0" VerticalContentAlignment="Center"/>
-        <Label x:Name="lbl_Priority" Content="Priority:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="100" Height="23" HorizontalContentAlignment="Right" Padding="5,0" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="tbox_CpuAffinity" Grid.Column="3" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Right" AllowDrop="False" IsTabStop="False" ToolTip="Set CPUs to use here. Comma separated values, such as &quot;3,4&quot; are accepted."/>
+        <PasswordBox x:Name="pbox_Password" Grid.Column="1" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="2" ToolTip="The password for your account."/>
+
+        <CheckBox x:Name="cbox_UseOTP" Content="Use OTP" Grid.Column="1" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="4" ToolTip="Check this if you use an authenticator."/>
+        <CheckBox x:Name="cbox_IsSteam" Content="Use Steam" Grid.Column="1" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="120" Height="23" TabIndex="4" ToolTip="Check this if you use the Steam client."/>
+
+        <Button x:Name="btn_Launch" Content="Launch FFXIV" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1" Click="btn_Launch_Click" TabIndex="5" Height="30" Padding="5"/>
+
+        <Label x:Name="lbl_Affinity" Content="CPU Affinity:" Grid.Column="2" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Height="23" HorizontalContentAlignment="Right" Padding="5,0" VerticalContentAlignment="Center"/>
+        <TextBox
+            x:Name="tbox_CpuAffinity" Grid.Column="3" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap"
+            VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Right" AllowDrop="False" IsTabStop="False"
+            ToolTip="Set CPUs to use here. Comma separated values, such as &quot;3,4&quot; are accepted."/>
+        <Label x:Name="lbl_Priority" Content="Priority:" Grid.Column="2" HorizontalAlignment="Left" Margin="0,38,0,0" VerticalAlignment="Top" Width="100" Height="23" HorizontalContentAlignment="Right" Padding="5,0" VerticalContentAlignment="Center"/>
         <ComboBox
             x:Name="combo_Priority" Grid.Column="3" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="120" Height="23"
-            ItemsSource="{Binding Path=PriorityEnumsWithCaption}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedIndex="3" IsTabStop="False" ToolTip="Process priority."/>
+            ItemsSource="{Binding Path=PriorityEnumsWithCaption}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedIndex="3" IsTabStop="False" ToolTip="Process priority." />
+
         <Button x:Name="btn_LoadFile" Content="Load From File" Grid.Column="3" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="120" Height="30" Click="btn_LoadFile_Click" IsTabStop="False" Padding="5"/>
         <Button x:Name="btn_SaveFile" Content="Save To File" Grid.Column="3" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top" Width="120" Height="30" Click="btn_SaveFile_Click" IsTabStop="False" Padding="5"/>
+
     </Grid>
-</mah:MetroWindow>
+</Window>
