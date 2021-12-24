@@ -124,6 +124,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\ICloseable.cs" />
+    <Compile Include="Model\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Model\OTPInputDialogMV.cs" />
+    <Compile Include="Model\RelayCommand.cs" />
+    <Compile Include="UI\OTPInputDialog.xaml.cs">
+      <DependentUpon>OTPInputDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\XIVGame.cs" />
     <Page Include="UI\MainWindow.xaml">
@@ -139,6 +146,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UI\ChipotleUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\OTPInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

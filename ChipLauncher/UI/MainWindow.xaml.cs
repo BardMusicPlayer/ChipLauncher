@@ -3,6 +3,7 @@ using System.Windows;
 
 namespace ChipLauncher
 {
+    using ChipLauncher.UI;
     using Microsoft.Win32;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -73,9 +74,19 @@ namespace ChipLauncher
                 return;
             }
 
+            string otp = string.Empty;
+            if (data.useOtp)
+            {
+                OTPInputDialog inputDialog = new OTPInputDialog();
+                inputDialog.ShowDialog();
+
+                otp = inputDialog.UserInputOTPString;
+                if (otp == string.Empty) return;
+            }
+
             try
             {
-                var sid = XIVGame.GetRealSid(data.username, data.password, "123456", data.isSteam);
+                var sid = XIVGame.GetRealSid(data.username, data.password, otp, data.isSteam);
                 if (sid.Equals("BAD"))
                     return;
 
@@ -145,22 +156,24 @@ namespace ChipLauncher
             var configFile = appDataDir + Path.DirectorySeparatorChar + "settings.json";
             if (!File.Exists(configFile))
             {
-                string searchedGamePath = XIVGame.GetFFXIVInstallPath();
-                if (searchedGamePath.Equals("UNKNOWN"))
+                config.GamePath = XIVGame.GetFFXIVInstallPath();
+                if (config.GamePath.Equals("UNKNOWN"))
                 {
                     MessageBox.Show($"Unable to auto-detect install path for FFXIV. Please navigate to your ffxivboot.exe.", "Error", MessageBoxButton.OK);
                     config.GamePath = AskUserToManuallySetGamePath();
                 }
+
                 string js = JsonSerializer.Serialize(config);
                 File.WriteAllText(configFile, js);
             }
 
             // check final game path
-            string jsonStr = File.ReadAllText(configFile);
+            string jsonStr = File.ReadAllText(configFile).Replace('\\', '/');
             config = JsonSerializer.Deserialize<AppConfig>(jsonStr);
             if (!Directory.Exists(config.GamePath))
             {
                 MessageBox.Show($"Unable to detect install path for FFXIV. Please add correct path to FFXIV in settings.json at {configFile}", "Error", MessageBoxButton.OK);
+                File.Delete(configFile);
                 return false;
             }
 
@@ -224,7 +237,7 @@ namespace ChipLauncher
                 pbox_Password.Password = data.password;
                 cbox_UseOTP.IsChecked = data.useOtp;
                 cbox_IsSteam.IsChecked = data.isSteam;
-                tbox_CpuAffinity.Text = data.cpuIds.Length > 0 ? string.Join(",", data.cpuIds) : string.Empty;
+                tbox_CpuAffinity.Text = data.cpuIds?.Length > 0 ? string.Join(",", data.cpuIds) : string.Empty;
                 combo_Priority.SelectedValue = data.priority;
                 XIVGame.GamePath = data.gamepath;
             }
