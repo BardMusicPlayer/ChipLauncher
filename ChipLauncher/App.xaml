@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ChipLauncher"
              x:Class="ChipLauncher.App"
-             StartupUri="MainWindow.xaml">
+             StartupUri="UI/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary Source="UI/ChipotleUI.xaml"/>
     </Application.Resources>

@@ -20,7 +20,7 @@
             <ColumnDefinition Width="140" />
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="img_Logo" HorizontalAlignment="Left" Height="100" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="100" Source="Resources/Logo.ico"/>
+        <Image x:Name="img_Logo" HorizontalAlignment="Left" Height="100" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="100" Source="../Resources/Logo.ico"/>
 
         <Label x:Name="lbl_Username" Content="Username:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="23" Width="100" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="5,0"/>
         <TextBox x:Name="tbox_Username" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="NoWrap" AcceptsReturn="False" VerticalAlignment="Top" Width="120" ToolTip="Your FFXIV account name." Tag="" Grid.Column="1" TabIndex="1"/>
